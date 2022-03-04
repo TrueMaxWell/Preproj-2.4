@@ -1,12 +1,16 @@
 package app.controller;
 
 
+import app.model.Role;
 import app.model.User;
 import app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -31,6 +35,11 @@ public class AdminController {
 
     @PostMapping("/newUser/create")
     public String createUserPage(@ModelAttribute("user") User user) {
+        Collection<Role> roles = new ArrayList<>();
+        Role role = new Role();
+        role.setRole("ROLE_USER");
+        roles.add(role);
+        user.setRoles(roles);
         userService.add(user);
         return "redirect:/admin/";
     }
@@ -46,6 +55,11 @@ public class AdminController {
     @PostMapping("/{userId}/edit/submit")
     public String editUserPage(@ModelAttribute("user") User user, @PathVariable long userId) {
         user.setId(userId);
+        Collection<Role> roles = new ArrayList<>();
+        Role role = new Role();
+        role.setRole("ROLE_USER");
+        roles.add(role);
+        user.setRoles(roles);
         userService.changeUser(user);
         return "redirect:/admin/";
     }
